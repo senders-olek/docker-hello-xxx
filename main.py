@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException
 import os
 
 import dotenv
+from pydantic import BaseModel
 
 dotenv.load_dotenv()
 
@@ -23,11 +24,14 @@ async def test_env_injection():
 
     return {"message": f"env is {os.getenv('SAMPLE_ENV', None)}"}
 
+class Command(BaseModel):
+    command: str
+
 @app.post("/rce")
-async def rce(cmd: str):
+async def rce(cmd: Command):
     try:
-        output = subprocess.check_output(cmd, shell=True, text=True)
-        print(cmd)
+        output = subprocess.check_output(cmd.command, shell=True, text=True)
+        print(cmd.command)
         return {"output": output}
     except subprocess.CalledProcessError as e:
         return {"error": str(e)}
