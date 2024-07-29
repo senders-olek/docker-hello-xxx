@@ -1,5 +1,5 @@
 # Use an official Python 3.11 runtime as an image
-FROM python:3.12.4-alpine3.19
+FROM python:3.12.4-slim
 
 # Create non-privileged user
 RUN useradd -m -s /bin/bash appuser
